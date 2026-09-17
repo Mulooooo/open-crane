@@ -5,9 +5,9 @@
 #define MAX_HEIGHT 70
 #define MAX_TRAVEL 300
 
-Ultrasonic tall_sanic(7);
-Ultrasonic wide_sanic(8);
-LiquidCrystal lcd = LiquidCrystal(2, 3, 4, 5, 6, 9);
+Ultrasonic tall_sanic(2, 3);
+Ultrasonic wide_sanic(4, 5);
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
 
 static int base_height;
 static int base_travel;
@@ -21,7 +21,9 @@ int get_travel_distance(Ultrasonic &travel_captor){
 }
 
 int clamp(int value){
-  return (value < 0)?0:value;
+  if (value < 0) return 0;
+  if (value > 999) return 999;
+  return value;
 }
 
 void print3digits(int value, int col, int row){
@@ -37,16 +39,16 @@ void setup()
   Serial.begin(9600);
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
-  lcd.print("H:   mm");
+  lcd.print("Hauteur  :    mm");
   lcd.setCursor(0, 1);
-  lcd.print("T:   mm");
+  lcd.print("Distance :    mm");
   base_height = get_height(tall_sanic);
   base_travel = get_travel_distance(wide_sanic);
 }
 
 void loop()
 {
-  print3digits(get_height(tall_sanic)-base_height, 2, 0);
-  print3digits(get_travel_distance(wide_sanic)-base_travel, 2, 1);
-  delay(50);
+  print3digits(get_height(tall_sanic)-base_height, 11, 0);
+  print3digits(get_travel_distance(wide_sanic)-base_travel, 11, 1);
+  delay(75);
 }
